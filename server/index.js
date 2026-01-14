@@ -34,12 +34,14 @@ app.post('/api/notes', async (req, res) => {
     const newNote = {
         id: nanoid(),
         content,
-        color: color || 'yellow', // yellow, pink, blue, green
+        color: color || 'yellow',
         category: category || 'General',
         author: author || 'Anonymous',
         likes: 0,
         createdAt: new Date().toISOString(),
-        rotation: Math.floor(Math.random() * 6) - 3 // Random rotation -3 to 3 deg
+        rotation: Math.floor(Math.random() * 10) - 5,
+        x: Math.floor(Math.random() * (1600 - 250)) + 50, // Within board bounds
+        y: Math.floor(Math.random() * (1500 - 250)) + 50
     };
 
     await db.update(({ notes }) => notes.push(newNote));
@@ -54,6 +56,47 @@ app.patch('/api/notes/:id/like', async (req, res) => {
         if (note) note.likes += 1;
     });
     res.json({ success: true });
+});
+
+// Update position
+app.patch('/api/notes/:id/position', async (req, res) => {
+    const { id } = req.params;
+    const { x, y } = req.body;
+    await db.update(({ notes }) => {
+        const note = notes.find(n => n.id === id);
+        if (note) {
+            note.x = x;
+            note.y = y;
+        }
+    });
+    res.json({ success: true });
+});
+
+// Add comment to a note
+app.post('/api/notes/:id/comments', async (req, res) => {
+    const { id } = req.params;
+    const { author, text } = req.body;
+
+    if (!text) {
+        return res.status(400).json({ error: 'Comment text is required' });
+    }
+
+    const newComment = {
+        id: nanoid(),
+        author: author || '匿名用户',
+        text,
+        createdAt: new Date().toISOString()
+    };
+
+    await db.update(({ notes }) => {
+        const note = notes.find(n => n.id === id);
+        if (note) {
+            if (!note.comments) note.comments = [];
+            note.comments.push(newComment);
+        }
+    });
+
+    res.status(201).json(newComment);
 });
 
 // 4. Delete a note

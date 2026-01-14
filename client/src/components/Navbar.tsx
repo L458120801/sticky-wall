@@ -1,4 +1,3 @@
-```javascript
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { StickyNote, Plus, Archive, Info } from 'lucide-react';
@@ -16,12 +15,12 @@ const Navbar: React.FC = () => {
           </div>
           <span>CloudWall</span>
         </Link>
-        
+
         <div className="nav-links">
-          <NavLink to="/" icon={<StickyNote size={18} />} label="Wall" active={location.pathname === '/'} />
-          <NavLink to="/create" icon={<Plus size={18} />} label="Post Idea" active={location.pathname === '/create'} />
-          <NavLink to="/archive" icon={<Archive size={18} />} label="Archive" active={location.pathname === '/archive'} />
-          <NavLink to="/about" icon={<Info size={18} />} label="About" active={location.pathname === '/about'} />
+          <NavLink to="/" icon={<StickyNote size={18} />} label="留言墙" active={location.pathname === '/'} />
+          <NavLink to="/create" icon={<Plus size={18} />} label="发布灵感" active={location.pathname === '/create'} />
+          <NavLink to="/archive" icon={<Archive size={18} />} label="归档" active={location.pathname === '/archive'} />
+          <NavLink to="/about" icon={<Info size={18} />} label="关于" active={location.pathname === '/about'} />
         </div>
       </div>
     </nav>
@@ -31,7 +30,7 @@ const Navbar: React.FC = () => {
 const NavLink = ({ to, icon, label, active }: { to: string, icon: React.ReactNode, label: string, active: boolean }) => (
   <Link
     to={to}
-    className={`nav - item ${ active ? 'active' : '' } `}
+    className={`nav-item ${active ? 'active' : ''}`}
   >
     {icon}
     <span>{label}</span>
@@ -39,4 +38,3 @@ const NavLink = ({ to, icon, label, active }: { to: string, icon: React.ReactNod
 );
 
 export default Navbar;
-```

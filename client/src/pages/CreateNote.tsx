@@ -5,11 +5,11 @@ import { Send } from 'lucide-react';
 import './CreateNote.css';
 
 const colors = [
-    { name: 'yellow', hex: '#fde047' },
-    { name: 'blue', hex: '#7dd3fc' },
-    { name: 'pink', hex: '#f9a8d4' },
-    { name: 'green', hex: '#86efac' },
-    { name: 'purple', hex: '#d8b4fe' },
+    { name: 'yellow', hex: '#fde047', label: '柠檬黄' },
+    { name: 'blue', hex: '#7dd3fc', label: '天空蓝' },
+    { name: 'pink', hex: '#f9a8d4', label: '樱花粉' },
+    { name: 'green', hex: '#86efac', label: '薄荷绿' },
+    { name: 'purple', hex: '#d8b4fe', label: '香芋紫' },
 ];
 
 const CreateNote: React.FC = () => {
@@ -27,13 +27,13 @@ const CreateNote: React.FC = () => {
         try {
             await axios.post('http://localhost:3000/api/notes', {
                 content,
-                author: author || 'Anonymous',
+                author: author || '匿名用户',
                 color: selectedColor
             });
             navigate('/');
         } catch (err) {
             console.error(err);
-            alert('Failed to post note');
+            alert('发布失败，请检查网络');
         } finally {
             setLoading(false);
         }
@@ -42,14 +42,14 @@ const CreateNote: React.FC = () => {
     return (
         <div className="create-container">
             <div className="form-card">
-                <h1>Post a Sticky Note</h1>
-                <p className="subtitle">Share your thought with the world.</p>
+                <h1>发布新灵感</h1>
+                <p className="subtitle">把你的想法贴在墙上，与大家分享。</p>
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label>Your Idea</label>
+                        <label>你的想法</label>
                         <textarea
-                            placeholder="Write something awesome..."
+                            placeholder="写点什么有趣的..."
                             value={content}
                             onChange={e => setContent(e.target.value)}
                             rows={5}
@@ -60,7 +60,7 @@ const CreateNote: React.FC = () => {
                     </div>
 
                     <div className="form-group">
-                        <label>Pick a Color</label>
+                        <label>选择颜色</label>
                         <div className="color-picker">
                             {colors.map(c => (
                                 <button
@@ -69,17 +69,18 @@ const CreateNote: React.FC = () => {
                                     className={`color-btn ${selectedColor === c.name ? 'selected' : ''}`}
                                     style={{ backgroundColor: c.hex }}
                                     onClick={() => setSelectedColor(c.name)}
-                                    aria-label={`Select ${c.name}`}
+                                    aria-label={`选择 ${c.label}`}
+                                    title={c.label}
                                 />
                             ))}
                         </div>
                     </div>
 
                     <div className="form-group">
-                        <label>Signed By (Optional)</label>
+                        <label>署名 (可选)</label>
                         <input
                             type="text"
-                            placeholder="Anonymous"
+                            placeholder="匿名用户"
                             value={author}
                             onChange={e => setAuthor(e.target.value)}
                             maxLength={20}
@@ -87,24 +88,24 @@ const CreateNote: React.FC = () => {
                     </div>
 
                     <button type="submit" className="submit-btn" disabled={loading}>
-                        {loading ? 'Posting...' : <><Send size={18} /> Post to Wall</>}
+                        {loading ? '发布中...' : <><Send size={18} /> 贴到墙上</>}
                     </button>
                 </form>
             </div>
 
             <div className="preview-section">
-                <h3>Preview</h3>
+                <h3>实时预览</h3>
                 <div
                     className="note-card preview-card"
                     style={{ '--note-color': `var(--note-${selectedColor})`, '--rot': '-2deg' } as React.CSSProperties}
                 >
                     <div className="note-content">
-                        <p>{content || "Your thoughts will appear here..."}</p>
+                        <p>{content || "你的想法会显示在这里..."}</p>
                     </div>
                     <div className="note-footer" style={{ borderTop: '1px solid rgba(0,0,0,0.1)' }}>
                         <div className="note-meta">
-                            <span className="author" style={{ fontWeight: 600 }}>@{author || "Anonymous"}</span>
-                            <span className="date">Just now</span>
+                            <span className="author" style={{ fontWeight: 600 }}>@{author || "匿名用户"}</span>
+                            <span className="date">刚刚</span>
                         </div>
                     </div>
                 </div>

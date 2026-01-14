@@ -1,35 +1,75 @@
 .note-card {
     background-color: var(--note-color);
     color: #1e293b;
-    width: 100%;
-    aspect-ratio: 1;
-    /* Square sticky notes */
+    width: 250px;
+    /* Fixed width for absolute positioning */
+    height: 250px;
     padding: 24px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    transform: rotate(var(--rot));
-    /* transition: transform 0.2s; defined in global */
-    position: relative;
+    /* Transform handled by Framer Motion */
+    /* transition: transform 0.2s; - Remove CSS transition to avoid conflict with JS animation */
     font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-    /* Handwritten feel */
-    cursor: pointer;
+    user-select: none;
+    /* Prevent text selection while dragging */
 }
+
+.note-card:active {}
 
 /* Pin effect */
 .note-card::after {
     content: '';
     position: absolute;
-    top: -10px;
+    top: -15px;
+    /* Move up slightly */
     left: 50%;
     transform: translateX(-50%);
-    width: 12px;
-    height: 12px;
-    background-color: rgba(0, 0, 0, 0.2);
+    width: 14px;
+    height: 14px;
+    background-color: #ef4444;
+    /* Red pin head */
     border-radius: 50%;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
-    /* Visual only, simplified pin */
+    box-shadow:
+        inset -2px -2px 2px rgba(0, 0, 0, 0.3),
+        inset 2px 2px 2px rgba(255, 255, 255, 0.5),
+        2px 4px 4px rgba(0, 0, 0, 0.3);
+    /* Drop shadow for depth */
+    z-index: 5;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* Metal part of pin (pseudo-element on toggle) */
+.note-card::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background-color: #94a3b8;
+    /* Silver stem */
+    border-radius: 50%;
+    z-index: 4;
+}
+
+.drag-handle {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    z-index: 20;
+    cursor: grab;
+    /* background: rgba(255,0,0,0.2); Debug: see handle area */
+    border-radius: 50%;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
 }
 
 .note-content {
@@ -97,5 +137,165 @@
 
 .fill-current {
     fill: currentColor;
-    color: #e11d48;
+}
+
+/* Expanded View Modal */
+.note-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.note-modal-content {
+    width: 500px;
+    min-height: 400px;
+    max-width: 90%;
+    background-color: var(--note-color);
+    padding: 40px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+    color: #1e293b;
+    display: flex;
+    flex-direction: column;
+    transform: rotate(-2deg);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.modal-close-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: black;
+}
+
+.modal-body {
+    flex: 1;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Comments Section */
+.comments-section {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 2px dashed rgba(0, 0, 0, 0.2);
+}
+
+.comments-section h4 {
+    font-size: 1rem;
+    margin: 0 0 12px 0;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.comments-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+}
+
+.comment-item {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.comment-author {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.comment-text {
+    margin: 4px 0 0 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.no-comments {
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.5);
+    font-style: italic;
+    text-align: center;
+    padding: 16px 0;
+}
+
+/* Add Comment Form */
+.add-comment-form {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.comment-input {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 12px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.7);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.comment-input:focus {
+    border-color: rgba(0, 0, 0, 0.4);
+}
+
+.comment-submit-btn {
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.comment-submit-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+/* Comment count on card */
+.comment-count {
+    cursor: default;
+    opacity: 0.8;
 }

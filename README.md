@@ -1,76 +1,181 @@
-# ☁️ Cloud Sticky Note Wall (云端灵感便利贴墙)
+# ☁️ Cloud Sticky Wall (云便利贴墙)
 
-A collaborative, real-time(ish) digital sticky note wall where users can post ideas, thoughts, and moods. Built with modern web technologies for the Huawei Cloud Application Construction challenge.
+一个基于 React + Node.js 的实时便利贴墙应用，支持拖拽排列、留言互动等功能。专为华为云 ECS 部署设计的轻量级全栈项目。
 
-![Cloud Wall Project](https://via.placeholder.com/800x400?text=Cloud+Sticky+Wall+Preview)
+![Preview](https://img.shields.io/badge/Status-Active-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue)
 
-## ✨ Features
+## ✨ 功能特性
 
-- **Dynamic Sticky Wall**: A masonry-style grid of colorful notes.
-- **Create Ideas**: Post new notes with customizable colors (Yellow, Blue, Pink, Green, Purple).
-- **Interactive**: Like notes to show appreciation.
-- **Harmonious UI**: Glassmorphism effects, dark mode, and smooth transitions.
-- **Tech Stack**:
-    - **Frontend**: Vite + React + TypeScript + Vanilla CSS
-    - **Backend**: Node.js + Express (REST API)
-    - **Database**: LowDB (Local JSON, perfect for ECS single-instance)
+### 📌 便利贴管理
+- **创建便利贴**：支持多种颜色（黄色、蓝色、粉色、绿色、紫色）
+- **拖拽排列**：按住钉子即可自由拖动，边界智能限制
+- **删除 & 点赞**：快速操作便利贴
 
-## 🚀 Getting Started
+### 💬 留言互动
+- **查看留言数**：便利贴上直接显示留言条数
+- **双击放大**：双击便利贴查看详情和所有留言
+- **发送留言**：支持匿名或署名留言
 
-### Prerequisites
+### 🎨 精美界面
+- **手绘红砖墙背景**：二次元风格的温馨氛围
+- **逼真图钉效果**：CSS 实现的 3D 立体图钉
+- **平滑动画**：基于 Framer Motion 的流畅交互
+- **响应式滚动**：2160px 高度可滚动画布
 
-- Node.js 18+
+## 🛠️ 技术栈
 
-### Installation
+### 前端
+- **React 18** + TypeScript
+- **Vite** - 极速构建工具
+- **Framer Motion** - 动画库
+- **Axios** - HTTP 请求
+- **Lucide React** - 图标库
+- **React Router** - 路由管理
 
-1.  Clone the repository.
-    ```bash
-    git clone https://github.com/YOUR_USERNAME/sticky-note-wall.git
-    cd sticky-note-wall
-    ```
+### 后端
+- **Node.js** + Express
+- **LowDB** - 轻量级 JSON 数据库
+- **Nanoid** - 唯一 ID 生成
+- **CORS** - 跨域支持
 
-2.  Install dependencies for both Client and Server.
-    ```bash
-    # Install Client deps
-    cd client
-    npm install
+## 🚀 快速开始
 
-    # Install Server deps
-    cd ../server
-    npm install
-    ```
+### 环境要求
+- Node.js >= 18.0.0
+- npm >= 9.0.0
 
-3.  Start the Application.
-    *   **Server** (Port 3000):
-        ```bash
-        cd server
-        npm run dev
-        ```
-    *   **Client** (Port 5173):
-        ```bash
-        cd client
-        npm run dev
-        ```
+### 安装步骤
 
-4.  Open `http://localhost:5173` in your browser.
+1. **克隆仓库**
+```bash
+git clone https://github.com/L458120801/sticky-wall.git
+cd sticky-wall
+```
 
-## 🛠 Deployment on Huawei Cloud ECS
+2. **安装后端依赖**
+```bash
+cd server
+npm install
+```
 
-1.  **Provision ECS**: Buy a basic Elastic Cloud Server (Ubuntu/CentOS).
-2.  **Environment**: Install Node.js 18.
-    ```bash
-    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-    sudo apt-get install -y nodejs
-    ```
-3.  **Upload Code**: Use git clone or SCP.
-4.  **Run**: Use `pm2` to keep the server running.
-    ```bash
-    npm install -g pm2
-    cd server && pm2 start index.js --name "api"
-    cd ../client && npm run build
-    npx serve dist -p 80
-    ```
+3. **安装前端依赖**
+```bash
+cd ../client
+npm install
+```
 
-## 📝 License
+4. **初始化数据库（可选）**
+```bash
+cd ../server
+node seed.js
+```
 
-ISC
+5. **启动后端服务**
+```bash
+cd server
+npm run dev
+# 服务运行在 http://localhost:3000
+```
+
+6. **启动前端服务**（新终端）
+```bash
+cd client
+npm run dev
+# 访问 http://localhost:5173
+```
+
+## 📁 项目结构
+
+```
+sticky-wall/
+├── client/                 # 前端 React 应用
+│   ├── public/
+│   │   └── wall.png       # 背景纹理
+│   ├── src/
+│   │   ├── components/    # 组件
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── NoteCard.tsx
+│   │   │   └── NoteCard.css
+│   │   ├── pages/         # 页面
+│   │   │   ├── Wall.tsx
+│   │   │   ├── Wall.css
+│   │   │   ├── CreateNote.tsx
+│   │   │   ├── About.tsx
+│   │   │   └── Archive.tsx
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   └── main.tsx
+│   └── package.json
+│
+├── server/                 # 后端 Node.js 服务
+│   ├── index.js           # Express 服务入口
+│   ├── seed.js            # 数据库种子脚本
+│   ├── db.json            # LowDB 数据文件
+│   └── package.json
+│
+├── .gitignore
+└── README.md
+```
+
+## 🌐 API 接口
+
+### 便利贴操作
+| 方法 | 端点 | 描述 |
+|------|------|------|
+| GET | `/api/notes` | 获取所有便利贴 |
+| POST | `/api/notes` | 创建新便利贴 |
+| PATCH | `/api/notes/:id/like` | 点赞便利贴 |
+| PATCH | `/api/notes/:id/position` | 更新位置 |
+| DELETE | `/api/notes/:id` | 删除便利贴 |
+
+### 留言操作
+| 方法 | 端点 | 描述 |
+|------|------|------|
+| POST | `/api/notes/:id/comments` | 添加留言 |
+
+## ☁️ 华为云 ECS 部署
+
+### 1. 准备 ECS 实例
+- 选择 Ubuntu 22.04 或 CentOS 8
+- 开放端口：22 (SSH), 3000 (API), 5173 (前端) 或 80/443
+
+### 2. 安装 Node.js
+```bash
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt install -y nodejs
+```
+
+### 3. 使用 PM2 运行后端
+```bash
+npm install -g pm2
+cd server
+pm2 start index.js --name sticky-wall-api
+```
+
+### 4. 构建前端并使用 Nginx
+```bash
+cd client
+npm run build
+# 将 dist 目录配置到 Nginx
+```
+
+## 📋 待办功能
+
+- [ ] 用户认证系统
+- [ ] 便利贴分类/标签
+- [ ] 搜索功能
+- [ ] 导出/分享便利贴
+- [ ] 黑暗模式切换
+- [ ] 移动端优化
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 📄 许可证
+
+MIT License © 2026
+
+---
+
+**Made with ❤️ for Huawei Cloud**
