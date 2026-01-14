@@ -1,0 +1,101 @@
+.note-card {
+    background-color: var(--note-color);
+    color: #1e293b;
+    width: 100%;
+    aspect-ratio: 1;
+    /* Square sticky notes */
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    transform: rotate(var(--rot));
+    /* transition: transform 0.2s; defined in global */
+    position: relative;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+    /* Handwritten feel */
+    cursor: pointer;
+}
+
+/* Pin effect */
+.note-card::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+    /* Visual only, simplified pin */
+}
+
+.note-content {
+    flex: 1;
+    font-size: 1.1rem;
+    font-weight: 500;
+    overflow-y: auto;
+    margin-bottom: 12px;
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.note-content::-webkit-scrollbar {
+    display: none;
+}
+
+.note-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 8px;
+}
+
+.note-meta {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+    font-family: 'Inter', sans-serif;
+}
+
+.author {
+    font-weight: 600;
+}
+
+.note-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+    transition: all 0.2s;
+}
+
+.like-btn:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #e11d48;
+}
+
+.delete-btn:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #ef4444;
+}
+
+.fill-current {
+    fill: currentColor;
+    color: #e11d48;
+}
